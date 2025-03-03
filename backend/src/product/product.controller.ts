@@ -1,0 +1,108 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFile,
+  UploadedFiles,
+  Query,
+  Put,
+} from '@nestjs/common';
+import { ProductService } from './product.service';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes } from '@nestjs/swagger';
+import { UploadService } from '@/base/multer/upload.service';
+import { ListDto } from '@/shared/dtos/common.dto';
+import { Public } from '@/auth/decorator/public.decorator';
+
+@Controller('product')
+export class ProductController {
+  constructor(
+    private readonly productService: ProductService,
+    private uploadService: UploadService,
+  ) {}
+
+  @Post()
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 10 }]))
+  async create(
+    @Body() payload: CreateProductDto,
+    @UploadedFiles() files: { images?: Express.Multer.File[] },
+  ) {
+    try {
+      const fileNames = await this.uploadService.uploadMultipeFile(files.images);
+
+      return this.productService.create({
+        ...payload,
+        variants: payload.variants.map((variant, index: number) => {
+          return {
+            ...variant,
+            image: fileNames[index],
+          };
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+
+      throw error;
+    }
+  }
+
+  @Get()
+  @Public()
+  findAll(@Query() query: ListDto) {
+    return this.productService.findAll(query);
+  }
+
+  @Get('client')
+  list(@Query() query: ListDto) {
+    return this.productService.listClient(query);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.productService.findOne(+id);
+  }
+
+  @Put(':id')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 10 }]))
+  async update(
+    @Param('id') id: string,
+    @Body() payload: UpdateProductDto,
+    @UploadedFiles() files: { images?: Express.Multer.File[] },
+  ) {
+    let fileNames = undefined;
+    if (files?.images?.length) fileNames = await this.uploadService.uploadMultipeFile(files.images);
+
+    if (Array.isArray(fileNames)) {
+      payload.variants?.forEach(v => {
+        if (!v?.image) v.image = fileNames.shift();
+      });
+    }
+    return this.productService.update(+id, {
+      ...payload,
+    });
+  }
+  catch(error) {
+    console.log(error);
+
+    throw error;
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.productService.remove(+id);
+  }
+
+  @Patch(':id/active')
+  active(@Param('id') id: string, @Body('active') active: boolean) {
+    return this.productService.active(+id, active);
+  }
+}
