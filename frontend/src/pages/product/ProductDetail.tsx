@@ -22,9 +22,6 @@ const ProductDetail = () => {
 
     const user = useGetUserRedux()
 
-    console.log(user, 'dfgjl');
-
-
     const { id } = useParams();
     const { data: product, isLoading } = useQuery(['get_product', id], () => ApiProduct.get(id), { enabled: !!id });
 
@@ -45,7 +42,7 @@ const ProductDetail = () => {
 
     const [quantity, setQuantity] = useState<number>(1);
 
-    const { addToCart, cartItems } = useCart();
+    const { addToCart } = useCart();
 
     const handleAddToCart = () => {
         if (!user) {
@@ -71,20 +68,9 @@ const ProductDetail = () => {
             return;
         }
 
-        const cartVariant = {
-            id: variant.id,
-            product: { name: product.name },
-            type: variant.type,
-            price: product.price,
-            image: variant.image,
-        };
-
-        addToCart(cartVariant, quantity);
+        addToCart(variant.id, quantity);
         toast.success(`${product.name} (${variant.type}) đã được thêm vào giỏ hàng!`);
-        setQuantity(1); // Reset số lượng sau khi thêm
-
-        console.log(cartItems);
-
+        setQuantity(1);
     };
 
     const handleQuantityChange = (value: any) => {

@@ -32,6 +32,8 @@ const HomePage = React.lazy(() => import('@/pages/home'))
 const Productpage = React.lazy(() => import('@/pages/product'))
 const ProductDetailPage = React.lazy(() => import('@/pages/product/ProductDetail'))
 const CartPage = React.lazy(() => import('@/pages/cart'))
+const IntroducePage = React.lazy(() => import('@/pages/introduce'))
+const ContactPage = React.lazy(() => import('@/pages/contact'))
 
 export const PUBLIC_ROUTES: IRoute[] = [
   {
@@ -53,5 +55,15 @@ export const PUBLIC_ROUTES: IRoute[] = [
     name: 'Giỏ hàng',
     component: CartPage,
     path: '/cart'
+  },
+  {
+    name: 'Liên hệ',
+    component: ContactPage,
+    path: '/contact'
+  },
+  {
+    name: 'Giới thiệu',
+    component: IntroducePage,
+    path: '/introduce'
   },
 ];

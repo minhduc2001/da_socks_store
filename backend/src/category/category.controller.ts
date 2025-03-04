@@ -3,6 +3,7 @@ import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { ListDto } from '@/shared/dtos/common.dto';
+import { Public } from '@/auth/decorator/public.decorator';
 
 @Controller('category')
 export class CategoryController {
@@ -14,6 +15,7 @@ export class CategoryController {
   }
 
   @Get()
+  @Public()
   findAll(@Query() query: ListDto) {
     return this.categoryService.findAll(query);
   }

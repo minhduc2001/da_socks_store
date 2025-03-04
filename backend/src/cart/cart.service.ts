@@ -1,6 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateCartDto } from './dto/create-cart.dto';
-import { UpdateCartDto } from './dto/update-cart.dto';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cart } from './entities/cart.entity';
 import { Repository } from 'typeorm';
@@ -14,10 +12,11 @@ export class CartService {
     @InjectRepository(CartItem) private cartItemRepo: Repository<CartItem>,
     @InjectRepository(ProductVariant) private productVariantRepo: Repository<ProductVariant>,
   ) {}
+
   async getUserCart(userId: number) {
     let cart = await this.cartRepo.findOne({
       where: { user: { id: userId }, checked_out: false },
-      relations: { cart_items: { variant: true } },
+      relations: { cart_items: { variant: { product: true } } },
     });
 
     if (!cart) {
@@ -29,55 +28,51 @@ export class CartService {
   }
 
   async addToCart(userId: number, productVariantId: number, quantity: number) {
+    if (quantity < 1) throw new BadRequestException('Số lượng không được nhỏ hơn 1');
     const cart = await this.getUserCart(userId);
-    const variant = await this.productVariantRepo.findOne({ where: { id: productVariantId } });
+
+    const variant = await this.productVariantRepo.findOne({
+      where: { id: productVariantId },
+      relations: { product: true },
+    });
 
     if (!variant) throw new NotFoundException('Product variant not found');
+    if (variant.stock < quantity) throw new BadRequestException('Số lượng vượt quá tồn kho');
 
     let cartItem = cart.cart_items.find(item => item.variant.id === productVariantId);
 
     if (cartItem) {
-      cartItem.quantity += quantity;
+      cartItem.quantity = quantity;
+      await this.cartItemRepo.save(cartItem);
     } else {
       cartItem = this.cartItemRepo.create({ cart, variant, quantity });
+      await this.cartItemRepo.save(cartItem);
       cart.cart_items.push(cartItem);
     }
 
-    await this.cartRepo.save(cart);
     return cart;
   }
 
   async removeFromCart(userId: number, productVariantId: number) {
     const cart = await this.getUserCart(userId);
-    cart.cart_items = cart.cart_items.filter(item => item.variant.id !== productVariantId);
-    await this.cartRepo.save(cart);
+    const cartItem = cart.cart_items.find(item => item.id == productVariantId);
+
+    if (!cartItem) throw new NotFoundException('Mục không tồn tại trong giỏ hàng');
+
+    await this.cartItemRepo.remove(cartItem);
+    cart.cart_items = cart.cart_items.filter(item => item.id !== productVariantId);
     return cart;
   }
 
   async checkoutCart(userId: number) {
     const cart = await this.getUserCart(userId);
+    if (cart.cart_items.length === 0) {
+      throw new BadRequestException('Giỏ hàng trống, không thể thanh toán');
+    }
     cart.checked_out = true;
     await this.cartRepo.save(cart);
-    return cart;
-  }
-
-  create(createCartDto: CreateCartDto) {
-    return 'This action adds a new cart';
-  }
-
-  findAll() {
-    return `This action returns all cart`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} cart`;
-  }
-
-  update(id: number, updateCartDto: UpdateCartDto) {
-    return `This action updates a #${id} cart`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} cart`;
+    const newCart = this.cartRepo.create({ user: { id: userId }, cart_items: [] });
+    await this.cartRepo.save(newCart);
+    return newCart;
   }
 }

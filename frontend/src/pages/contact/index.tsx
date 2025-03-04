@@ -1,13 +1,13 @@
 import React from "react";
 
-const ContactPage: React.FC = () => {
+const ContactPage = () => {
     return (
         <section className="page_contact section py-6">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Left Section */}
                     <div className="left-contact p-4">
-                        <h1 className="text-2xl font-bold mb-4">Tất phải Chất</h1>
+                        <h1 className="text-2xl font-bold mb-4">Có tất </h1>
                         <div className="mb-3 flex items-start">
                             <i className="fas fa-map-marker-alt text-lg mr-2 text-gray-600"></i>
                             <div>
@@ -22,7 +22,7 @@ const ContactPage: React.FC = () => {
                         </div>
                         <div className="mb-3 flex items-center">
                             <i className="fas fa-envelope text-lg mr-2 text-gray-600"></i>
-                            <a href="mailto:tatphaichat@gmail.com" className="text-blue-600">tatphaichat@gmail.com</a>
+                            <a href="mailto:cotat@gmail.com" className="text-blue-600">cotat@gmail.com</a>
                         </div>
 
                         {/* Contact Form */}

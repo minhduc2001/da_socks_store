@@ -8,14 +8,15 @@ function ProductItem({ product }: any) {
     return (
         <div className='product_item_main'>
             <div className='product_thumbnail'>
-                <img src='https://hoanghamobile.com/tin-tuc/wp-content/uploads/2023/07/anh-dep-thien-nhien-2-1.jpg'></img>
+                <img src={product?.variants?.[0]?.image}></img>
             </div>
             <div className="product_info">
                 <div className="product_title">{product?.name}</div>
                 <div className="product_item_cta">
-                    <div className="price_box">{(product?.price).toLocaleString()}</div>
-                    <Link to={`/product/${product.id}`} className="btn_buy rounded-full bg-red-500 w-8 h-8 flex justify-center text-white font-bold mr-2">
-                        <ShoppingCartOutlined />
+                    <div className="price_box">{(product?.price).toLocaleString()} đ</div>
+                    <Link to={`/product/${product.id}`} className="btn_buy h-8 flex justify-center items-center font-bold mr-2">
+                        {/* <ShoppingCartOutlined /> */}
+                        Chi tiết
                     </Link>
                 </div>
             </div>

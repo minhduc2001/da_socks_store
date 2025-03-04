@@ -17,9 +17,9 @@ export class CartController {
   @Post('add')
   async addToCart(
     @GetUser('id') userId: number,
-    @Body() { productVariantId, quantity }: { productVariantId: number; quantity: number },
+    @Body() { variantId, quantity }: { variantId: number; quantity: number },
   ) {
-    return this.cartService.addToCart(userId, productVariantId, quantity);
+    return this.cartService.addToCart(userId, variantId, quantity);
   }
 
   @Delete('remove/:variant_id')

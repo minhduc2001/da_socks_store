@@ -3,11 +3,16 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Badge, Drawer, Menu, Dropdown } from "antd";
+import { Badge, Drawer } from "antd";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { MenuOutlined } from "@mui/icons-material";
-import { useGetUserRedux } from "@/redux/slices/UserSlice";
+import { logoutUser, useGetUserRedux } from "@/redux/slices/UserSlice";
+import { useCart } from "@/pages/cart/useCart";
+import { LoginOutlined } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import ApiCart from "@/api/ApiCart";
 function Header() {
     const [visible, setVisible] = useState(false);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -19,6 +24,17 @@ function Header() {
     const onClose = () => {
         setVisible(false);
     };
+
+    const dispatch = useDispatch()
+
+    const {
+        data: serverCart,
+    } = useQuery({
+        queryKey: ['cart'],
+        queryFn: ApiCart.get,
+        enabled: !!user?.id
+    });
+
 
 
     // Handle window resize
@@ -38,10 +54,14 @@ function Header() {
         };
     }, []);
 
+    const handleButton = () => {
+        if (user?.id) dispatch(logoutUser())
+        else navigate('/login')
+    }
     return (
         <div className="header">
             <Drawer
-                title="Tất phải chất"
+                title="Có tất"
                 placement={"left"}
                 closable={true}
                 onClose={onClose}
@@ -95,7 +115,7 @@ function Header() {
                     </button>
                 )}
                 <div className="logo-header">
-                    <img src="/logo.png" />
+                    <img src="https://cotat.vn/wp-content/uploads/2024/06/cropped-logo-ctt-ngang-03-time-skip-355b465042.png" />
                 </div>
                 <div className="nav">
                     <ul>
@@ -129,20 +149,19 @@ function Header() {
                             }
                         </li>
                         <li>
-                            <Link to={"/cart"}>
-                                <Badge count={1}>
-                                    <ShoppingBagOutlinedIcon />
-                                </Badge>
-                            </Link>
-                        </li>
-                        <li>
                             {
-                                !user?.id ?
-                                    <></> :
-                                    <Button disabled={true}>
-                                        {/*<LogoutIcon />*/}
-                                    </Button>
+                                user?.id && <Link to={"/cart"}>
+                                    <Badge count={serverCart?.cart_items?.length ?? 0}>
+                                        <ShoppingBagOutlinedIcon />
+                                    </Badge>
+                                </Link>
                             }
+
+                            <Button onClick={handleButton}>
+                                {
+                                    user?.id ? <LogoutIcon></LogoutIcon> : "Đăng nhập"
+                                }
+                            </Button>
                         </li>
                     </ul>
                 </div>

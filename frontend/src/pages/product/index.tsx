@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Checkbox, Col, Divider, Row, Select, Spin } from "antd";
 import ProductItem from "./components/ProductItem";
 import { useQuery } from "@tanstack/react-query";
@@ -25,11 +25,28 @@ const priceRanges = [
 ];
 
 export default function ProductList() {
-  const [selectedCategory, setSelectedCategory] = useState("Tất cả");
+  const [selectedCategory, setSelectedCategory] = useState<number[]>([]);
+  const [params, setParams] = useState<Query>({ page: 1, limit: 9999 })
 
   const { data: categories, isLoading: cLoading } = useQuery(['get_categories'], () => ApiCategory.list({ page: 1, limit: 9999 }))
-  const { data: products, isLoading: pLoading } = useQuery(['get_products'], () => ApiProduct.list({ page: 1, limit: 9999 }))
+  const { data: products, isLoading: pLoading } = useQuery(['get_products', params], () => ApiProduct.list(params))
 
+  const handleChangeCategory = (e: any, id: number) => {
+    if (e.target.checked) {
+      setSelectedCategory((p) => [...p, id])
+    } else {
+      setSelectedCategory(p => p.filter(r => r != id))
+    }
+  }
+
+  useEffect(() => {
+    if (selectedCategory.length) {
+      setParams(p => ({ ...p, filter: `{"category.id": "$in:${selectedCategory.join(',')}"}` }))
+    }
+    else {
+      setParams({ page: 1, limit: 9999 })
+    }
+  }, [selectedCategory])
   return (
     <div className="p-4 max-w-6xl">
       <h1 className="text-xl font-bold mb-4">Danh sách sản phẩm</h1>
@@ -44,7 +61,7 @@ export default function ProductList() {
               <div className="category_container mb-4">
                 <h3 className="font-bold text-lg">Danh mục sản phẩm</h3>
                 {categories?.results.map(c => (
-                  <Checkbox key={c.name}>{c.name}</Checkbox>
+                  <Checkbox onChange={(e) => handleChangeCategory(e, c.id)} key={c.name}>{c.name}</Checkbox>
                 ))}
               </div>
 
@@ -71,7 +88,6 @@ export default function ProductList() {
                 <Col key={index} span={6}>
                   <ProductItem product={product}></ProductItem>
                 </Col>
-
               ))}
             </Row>
           </Col>

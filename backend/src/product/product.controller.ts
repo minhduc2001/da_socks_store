@@ -55,12 +55,12 @@ export class ProductController {
   }
 
   @Get()
-  @Public()
   findAll(@Query() query: ListDto) {
     return this.productService.findAll(query);
   }
 
   @Get('client')
+  @Public()
   list(@Query() query: ListDto) {
     return this.productService.listClient(query);
   }

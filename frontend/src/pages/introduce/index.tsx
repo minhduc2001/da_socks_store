@@ -16,17 +16,17 @@ function IntroducePage() {
                             </div>
 
                             <div className="content-page text-gray-700 space-y-4">
-                                <p className="text-lg font-semibold">Tất Phải Chất</p>
+                                <p className="text-lg font-semibold">Có tất</p>
                                 <p>Chuyên Tất vớ Nam | Tất vớ nữ | Tất mang giày tây | Vớ mang giày tây | Tất thể thao</p>
                                 <p>Hiện chúng mình đang bán Online, có mặt ở nhiều nền tảng thương mại điện tử khác nhau:</p>
 
                                 <ul className="list-disc pl-5">
-                                    <li>Website: <a href="https://tatphaichat.com" className="text-blue-600">tatphaichat.com</a></li>
-                                    <li>Shopee: <a href="https://shope.ee/7zf5UGSxOb" className="text-blue-600">shope.ee/7zf5UGSxOb</a></li>
-                                    <li>Fanpage: <a href="https://facebook.com/tatphaichat" className="text-blue-600">facebook.com/tatphaichat</a></li>
+                                    <li>Website: <a href="/" className="text-blue-600">cotat.com</a></li>
+                                    <li>Shopee: <a href="#" className="text-blue-600">shope.ee/7zf5UGSxOb</a></li>
+                                    <li>Fanpage: <a href="#" className="text-blue-600">facebook.com/cotat</a></li>
                                 </ul>
 
-                                <p>Với hơn 5000 đơn hàng từ khắp mọi miền tổ quốc trong hơn năm qua, Tất Phải Chất tin rằng sản phẩm sẽ làm hài lòng quý khách hàng.</p>
+                                <p>Với hơn 5000 đơn hàng từ khắp mọi miền tổ quốc trong hơn năm qua, Có tất tin rằng sản phẩm sẽ làm hài lòng quý khách hàng.</p>
 
                                 <p className="font-semibold">CẦN GẤP CÓ TẤT NGAY</p>
                                 <p>- Thời gian giao hàng: 1-2 ngày ở HCM và 4-7 ngày ở các tỉnh thành khác</p>

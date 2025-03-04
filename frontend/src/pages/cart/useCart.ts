@@ -1,53 +1,72 @@
-import { useState } from 'react';
-
-export interface CartItem {
-  id: string;
-  variant: {
-    id: string;
-    product: { name: string };
-    type: string;
-    price: number;
-    image?: string;
-  };
-  quantity: number;
-}
+// useCart.ts
+import ApiCart, { CartItem } from '@/api/ApiCart';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
 
 export const useCart = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const queryClient = useQueryClient();
 
-  const addToCart = (variant: CartItem['variant'], quantity: number = 1) => {
-    const existingItem = cartItems.find(item => item.variant.id === variant.id);
-    if (existingItem) {
-      // Nếu đã có, tăng số lượng
-      setCartItems(
-        cartItems.map(item =>
-          item.variant.id === variant.id ? { ...item, quantity: item.quantity + quantity } : item,
-        ),
-      );
-    } else {
-      // Nếu chưa có, thêm mới
-      const newItem: CartItem = {
-        id: Math.random().toString(36).substr(2, 9), // Tạo ID tạm thời
-        variant,
-        quantity,
-      };
-      setCartItems([...cartItems, newItem]);
+  // Lấy dữ liệu từ server bằng useQuery
+  const {
+    data: serverCart,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['cart'],
+    queryFn: ApiCart.get,
+  });
+
+  // State cục bộ để quản lý giỏ hàng
+  const [cartItems, setCartItems] = useState<CartItem[]>(serverCart?.cart_items || []);
+
+  // Đồng bộ state cục bộ với server khi serverCart thay đổi
+  useEffect(() => {
+    if (serverCart?.cart_items) {
+      setCartItems(serverCart.cart_items);
     }
-  };
+  }, [serverCart]);
 
-  const removeFromCart = (id: string) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
+  // Thêm vào giỏ hàng
+  const addToCartMutation = useMutation({
+    mutationFn: ApiCart.addToCart,
+    onSuccess: updatedCart => {
+      setCartItems(updatedCart.cart_items); // Cập nhật state cục bộ
+      queryClient.setQueryData(['cart'], updatedCart); // Cập nhật cache React Query
+    },
+  });
+
+  // Xóa khỏi giỏ hàng
+  const removeFromCartMutation = useMutation({
+    mutationFn: ApiCart.removeFromCart,
+    onSuccess: updatedCart => {
+      setCartItems(updatedCart.cart_items);
+      queryClient.setQueryData(['cart'], updatedCart);
+    },
+  });
+
+  // Thanh toán
+  const checkoutMutation = useMutation({
+    mutationFn: ApiCart.checkout,
+    onSuccess: () => {
+      setCartItems([]); // Xóa state cục bộ
+      queryClient.invalidateQueries({ queryKey: ['cart'] }); // Làm mới từ server
+    },
+  });
 
   const totalPrice = cartItems.reduce(
-    (sum, item) => sum + (item.variant.price || 0) * item.quantity,
+    (sum, item) => sum + (item.variant.product?.price ?? 0) * item.quantity,
     0,
   );
 
-  const checkout = () => {
-    console.log('Processing checkout...', cartItems);
-    setCartItems([]);
+  return {
+    cartItems,
+    isLoading,
+    error,
+    addToCart: (variantId: number, quantity: number) =>
+      addToCartMutation.mutate({ variantId, quantity }),
+    removeFromCart: (cartItemId: number) => removeFromCartMutation.mutate(cartItemId),
+    checkout: () => checkoutMutation.mutate(),
+    totalPrice,
+    totalItem: cartItems.length,
   };
-
-  return { cartItems, addToCart, removeFromCart, totalPrice, checkout };
 };

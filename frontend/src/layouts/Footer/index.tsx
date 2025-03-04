@@ -10,8 +10,8 @@ function Footer() {
                     <div>
                         <a href="/" className="mb-3 block">
                             <img
-                                src="//bizweb.dktcdn.net/100/476/370/themes/893647/assets/logo-footer.png?1729095712074"
-                                alt="logo Tất phải Chất"
+                                src="https://cotat.vn/wp-content/uploads/2024/06/cropped-logo-ctt-ngang-03-time-skip-355b465042.png"
+                                alt="Có tất"
                                 width={174}
                                 height={50}
                             />
@@ -27,7 +27,7 @@ function Footer() {
                             </div>
                             <div className="flex items-center">
                                 <i className="fas fa-envelope text-gray-600 mr-2" />
-                                <span><strong>Email:</strong> <a href="mailto:tatphaichat@gmail.com" className="text-blue-500">tatphaichat@gmail.com</a></span>
+                                <span><strong>Email:</strong> <a href="mailto:cotat@gmail.com" className="text-blue-500">cotat@gmail.com</a></span>
                             </div>
                         </div>
                     </div>
@@ -36,10 +36,10 @@ function Footer() {
                         <h4 className="text-lg font-semibold mb-2">Hỗ trợ khách hàng</h4>
                         <ul className="space-y-2">
                             <li><a href="/" className="text-gray-600 hover:text-blue-500">Trang chủ</a></li>
-                            <li><a href="/gioi-thieu" className="text-gray-600 hover:text-blue-500">Giới thiệu</a></li>
-                            <li><a href="/collections/all" className="text-gray-600 hover:text-blue-500">Sản phẩm</a></li>
-                            <li><a href="/tin-tuc" className="text-gray-600 hover:text-blue-500">Tin tức</a></li>
-                            <li><a href="/lien-he" className="text-gray-600 hover:text-blue-500">Liên hệ</a></li>
+                            <li><a href="/introduce" className="text-gray-600 hover:text-blue-500">Giới thiệu</a></li>
+                            <li><a href="/product" className="text-gray-600 hover:text-blue-500">Sản phẩm</a></li>
+                            {/* <li><a href="/tin-tuc" className="text-gray-600 hover:text-blue-500">Tin tức</a></li> */}
+                            <li><a href="/" className="text-gray-600 hover:text-blue-500">Liên hệ</a></li>
                         </ul>
                     </div>
                     {/* Policies */}
@@ -55,7 +55,7 @@ function Footer() {
                     <div>
                         <h4 className="text-lg font-semibold mb-2">Fanpage</h4>
                         <div className="mb-4">
-                            <div className="fb-page" data-href="https://www.facebook.com/TatphaiChat/" data-tabs="" data-width="" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"></div>
+                            <div className="fb-page" data-href="https://www.facebook.com/cotat/" data-tabs="" data-width="" data-height="" data-small-header="true" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"></div>
                         </div>
                         <h4 className="text-lg font-semibold mb-2">Phương thức thanh toán</h4>
                         <a href="/" target="_blank">
@@ -70,7 +70,7 @@ function Footer() {
             </div>
             <div className="bg-gray-100 py-2 mt-6 text-center text-sm">
                 <span>
-                    © Bản quyền thuộc về <a href="/" className="text-blue-500 font-semibold">Tất phải Chất</a> | Cung cấp bởi <a href="javascript:;" className="text-blue-500">Sapo</a>
+                    © Bản quyền thuộc về <a href="/" className="text-blue-500 font-semibold">Có tất</a>
                 </span>
             </div>
         </footer>
