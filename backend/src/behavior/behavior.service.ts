@@ -44,7 +44,7 @@ export class BehaviorService {
 
   @Cron(CronExpression.EVERY_5_SECONDS)
   async exportData() {
-    const filePath = path.join(__dirname, '../../../data/behavior_data.csv');
+    const filePath = path.join(__dirname, '../../../../data/behavior_data.csv');
 
     const data = await this.findAll();
     const csvHeader = 'user_id,product_id,views,cart_adds,purchases\n';
@@ -63,7 +63,7 @@ export class BehaviorService {
 
   @Cron(CronExpression.EVERY_5_SECONDS)
   async exportDataProduct() {
-    const filePath = path.join(__dirname, '../../../data/products.csv');
+    const filePath = path.join(__dirname, '../../../../data/products.csv');
 
     const data = await this.productRepo.find({
       where: { active: true },
@@ -82,7 +82,7 @@ export class BehaviorService {
 
   @Cron(CronExpression.EVERY_5_SECONDS)
   async exportDataUser() {
-    const filePath = path.join(__dirname, '../../../data/users.csv');
+    const filePath = path.join(__dirname, '../../../../data/users.csv');
 
     const data = await this.userRepo.find({ where: { role: ERole.CUSTOMER } });
     const csvHeader = 'user_id,age,gender,location\n';

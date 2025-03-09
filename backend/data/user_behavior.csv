@@ -1,8 +1,0 @@
-user_id,variant_id,purchase_count,view_count,cart_count
-user001,var002,5,10,3
-user001,var003,2,5,1
-user002,var001,8,15,5
-user002,var004,4,8,2
-user003,var007,3,5,1
-user003,var006,2,3,0
-user004,var005,1,2,0
