@@ -66,6 +66,6 @@ interface Query {
   limit?: number;
   page?: number;
   search?: string;
-  filter?: Record<string, string>;
+  filter?: string;
   sort?: string[];
 }

@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import * as exc from '@base/api/exception.reslover';
 import { UserService } from '@/user/user.service';
-import { LoginDto, RegisterDto } from './dtos/auth.dto';
+import { LoginDto, LoginUserDto, RegisterDto } from './dtos/auth.dto';
 import { IJWTPayload } from './interfaces/auth.interface';
 
 @Injectable()
@@ -46,6 +46,46 @@ export class AuthService {
     return {
       ...user,
       accessToken: accessToken,
+    };
+  }
+
+  async loginUser(dto: LoginUserDto): Promise<any> {
+    const { email, password } = dto;
+
+    const user = await this.userService.findByEmail(email);
+
+    if (!user || !user.comparePassword(password))
+      throw new exc.BadExcetion({
+        message: 'email hoặc mật khẩu không đúng',
+      });
+
+    if (!user.active) {
+      throw new exc.BadExcetion({ message: 'Tài khoản đã bị khóa' });
+    }
+
+    const payload: IJWTPayload = {
+      sub: user.id,
+    };
+
+    const accessToken = this.jwtService.sign(payload);
+
+    return {
+      ...user,
+      accessToken: accessToken,
+    };
+  }
+
+  async register(dto: RegisterDto) {
+    const user = await this.userService.register(dto);
+    const payload: IJWTPayload = {
+      sub: user.id,
+    };
+
+    const accessToken = this.jwtService.sign(payload);
+
+    return {
+      ...user,
+      accessToken,
     };
   }
 }

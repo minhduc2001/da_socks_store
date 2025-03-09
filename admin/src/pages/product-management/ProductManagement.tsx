@@ -80,13 +80,13 @@ export default function ProductManagement() {
             align: "center",
             width: 200,
         },
-        {
-            title: "Mô tả",
-            dataIndex: "description",
-            align: "center",
-            width: 400,
-            render: (value) => <div dangerouslySetInnerHTML={{ __html: value }}></div>
-        },
+        // {
+        //     title: "Mô tả",
+        //     dataIndex: "description",
+        //     align: "center",
+        //     width: 400,
+        //     render: (value) => <div dangerouslySetInnerHTML={{ __html: value }}></div>
+        // },
         {
             title: 'Trạng thái',
             dataIndex: 'active',

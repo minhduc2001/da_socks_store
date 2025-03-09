@@ -9,6 +9,8 @@ import { PaginateConfig } from '@/base/service/paginate/paginate';
 import { ListDto } from '@/shared/dtos/common.dto';
 import { ProductVariant } from './entities/product-variant.entity';
 import { Category } from '@/category/entities/category.entity';
+import { BehaviorService } from '@/behavior/behavior.service';
+import { User } from '@/user/entities/user.entity';
 
 @Injectable()
 export class ProductService extends BaseService<Product> {
@@ -17,6 +19,7 @@ export class ProductService extends BaseService<Product> {
     protected repository: Repository<Product>,
     @InjectRepository(ProductVariant)
     private productVariantRepository: Repository<ProductVariant>,
+    private behaviorService: BehaviorService,
   ) {
     super(repository);
   }
@@ -52,11 +55,22 @@ export class ProductService extends BaseService<Product> {
     return this.listWithPage(query, config);
   }
 
-  findOne(id: number) {
-    return this.repository.findOne({
+  async findOne(id: number, user: User) {
+    const product = await this.repository.findOne({
       where: { id },
       relations: { category: true, variants: true },
     });
+
+    await this.behaviorService.createOrUpdate(user.id, product.id, 1, 'views');
+    return product;
+  }
+
+  async findOneClient(id: number) {
+    const product = await this.repository.findOne({
+      where: { id },
+      relations: { category: true, variants: true },
+    });
+    return product;
   }
 
   async update(id: number, payload: UpdateProductDto) {

@@ -23,7 +23,11 @@ const ProductDetail = () => {
     const user = useGetUserRedux()
 
     const { id } = useParams();
-    const { data: product, isLoading } = useQuery(['get_product', id], () => ApiProduct.get(id), { enabled: !!id });
+    const { data: product1, isLoading: isLoading1 } = useQuery(['get_product', id], () => ApiProduct.get(id), { enabled: !!(id && user?.id) });
+    const { data: product2, isLoading: isLoading2 } = useQuery(['get_product_client', id], () => ApiProduct.getClient(id), { enabled: !!id });
+
+    const product = user?.id ? product1 : product2;
+    const idLoading = user?.id ? isLoading1 : isLoading2
 
     useEffect(() => {
         if (product) setVariant(product?.variants?.[0])

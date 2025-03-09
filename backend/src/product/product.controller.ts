@@ -20,6 +20,8 @@ import { ApiConsumes } from '@nestjs/swagger';
 import { UploadService } from '@/base/multer/upload.service';
 import { ListDto } from '@/shared/dtos/common.dto';
 import { Public } from '@/auth/decorator/public.decorator';
+import { GetUser } from '@/auth/decorator/get-user.decorator';
+import { User } from '@/user/entities/user.entity';
 
 @Controller('product')
 export class ProductController {
@@ -66,8 +68,14 @@ export class ProductController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  findOne(@Param('id') id: string, @GetUser() user: User) {
+    return this.productService.findOne(+id, user);
+  }
+
+  @Public()
+  @Get(':id/client')
+  findOneClient(@Param('id') id: string) {
+    return this.productService.findOneClient(+id);
   }
 
   @Put(':id')

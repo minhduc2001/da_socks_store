@@ -31,6 +31,7 @@ export interface IRoute {
 const HomePage = React.lazy(() => import('@/pages/statistic'))
 const ProductPage = React.lazy(() => import('@/pages/product-management/ProductManagement'))
 const CategoryPage = React.lazy(() => import('@/pages/category-management'))
+const OrderPage = React.lazy(() => import('@/pages/order-management'))
 const UserPage = React.lazy(() => import('@/pages/user-management'))
 
 
@@ -54,5 +55,10 @@ export const PUBLIC_ROUTES: IRoute[] = [
     name: 'Quản lý nhân viên',
     component: UserPage,
     path: '/user'
+  },
+  {
+    name: 'Quản lý đơn hàng',
+    component: OrderPage,
+    path: '/order'
   }
 ];

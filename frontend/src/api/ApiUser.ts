@@ -18,6 +18,8 @@ export interface IRegisterBody {
   username: string;
   email: string;
   password: string;
+  gender: string;
+  date_of_birth: string;
 }
 
 export interface ILoginRes {
@@ -65,7 +67,7 @@ export interface ICreateUser {
 }
 
 function login(data: any): Promise<IUser> {
-  return fetcher({ url: 'auth/login', method: 'post', data }, { isXWWWForm: true });
+  return fetcher({ url: 'auth/login-user', method: 'post', data }, { isXWWWForm: true });
 }
 
 function getUser(params?: IGetCustomersParams): Promise<DataListResponse<IUser>> {

@@ -18,7 +18,7 @@ const Login = () => {
 
   const handleLogin = (values: ILoginBody): void => {
     loginMutation.mutate(
-      { username: values.email, password: values.password },
+      { email: values.email, password: values.password },
       {
         onSuccess: (res: any) => {
           console.log(res);

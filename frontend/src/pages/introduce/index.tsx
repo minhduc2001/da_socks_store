@@ -1,6 +1,8 @@
 import React from "react";
 import "./index.scss"
 import Helmet from "@/components/Helmet.tsx";
+import { Typography } from "antd";
+const { Title, Text } = Typography;
 
 function IntroducePage() {
     return (
@@ -10,9 +12,9 @@ function IntroducePage() {
                     <div className="row">
                         <div className="col-span-12">
                             <div className="border-b pb-2 mb-4">
-                                <h1 className="text-xl font-bold text-gray-800">
-                                    <a href="#">Giới thiệu</a>
-                                </h1>
+                                <Title level={2} className="text-center mb-6 text-gray-800">
+                                    Giới thiệu
+                                </Title>
                             </div>
 
                             <div className="content-page text-gray-700 space-y-4">

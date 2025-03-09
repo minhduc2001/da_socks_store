@@ -41,11 +41,11 @@ export default function ProductList() {
 
   useEffect(() => {
     if (selectedCategory.length) {
-      setParams(p => ({ ...p, filter: `{"category.id": "$in:${selectedCategory.join(',')}"}` }))
+      return setParams(p => ({ ...p, filter: `{"category.id": "$in:${selectedCategory.join(',')}"}` }))
     }
-    else {
-      setParams({ page: 1, limit: 9999 })
-    }
+    // else {
+    setParams({ page: 1, limit: 9999 })
+    // }
   }, [selectedCategory])
   return (
     <div className="p-4 max-w-6xl">

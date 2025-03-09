@@ -35,8 +35,6 @@ function Header() {
         enabled: !!user?.id
     });
 
-
-
     // Handle window resize
     useEffect(() => {
         if (location.pathname == "/login") {
@@ -150,8 +148,8 @@ function Header() {
                         </li>
                         <li>
                             {
-                                user?.id && <Link to={"/cart"}>
-                                    <Badge count={serverCart?.cart_items?.length ?? 0}>
+                                <Link to={"/cart"} className="mr-4">
+                                    <Badge count={user?.id ? serverCart?.cart_items?.length ?? 0 : 0}>
                                         <ShoppingBagOutlinedIcon />
                                     </Badge>
                                 </Link>

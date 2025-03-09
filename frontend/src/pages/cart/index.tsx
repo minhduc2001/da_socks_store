@@ -3,16 +3,19 @@ import { Button, Card, Col, Row, Typography, Space, Divider, Empty, InputNumber,
 import { DeleteOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import ApiCart from '@/api/ApiCart';
+import { useGetUserRedux } from '@/redux/slices/UserSlice';
 
 const { Title, Text } = Typography;
 
 const CartComponent = () => {
     const queryClient = useQueryClient();
+    const user = useGetUserRedux()
 
     // Lấy dữ liệu giỏ hàng bằng useQuery
     const { data: cart, isLoading, error } = useQuery({
         queryKey: ['cart'],
         queryFn: ApiCart.get,
+        enabled: !!user?.id
     });
 
     // Mutation để xóa mục khỏi giỏ hàng
@@ -54,7 +57,7 @@ const CartComponent = () => {
         },
     });
 
-    const handleQuantityChange = (cartItem: any, newQuantity: number) => {
+    const handleQuantityChange = (cartItem: any, newQuantity: number, type?: 'add' | 'sub') => {
         const stock = cartItem.variant.stock || 0; // Giả định variant có thuộc tính stock
 
         // Chặn số lượng nhỏ hơn 0 hoặc lớn hơn stock
@@ -69,7 +72,7 @@ const CartComponent = () => {
 
         // Cập nhật số lượng bằng cách gọi lại API addToCart với số lượng mới
         const variantId = cartItem.variant.id;
-        updateQuantityMutation.mutate({ variantId, quantity: newQuantity });
+        updateQuantityMutation.mutate({ variantId, quantity: type == 'sub' ? - 1 : 1 });
     };
 
     if (isLoading) {
@@ -127,7 +130,7 @@ const CartComponent = () => {
                                         <Space>
                                             <Button
                                                 icon={<MinusOutlined />}
-                                                onClick={() => handleQuantityChange(item, item.quantity - 1)}
+                                                onClick={() => handleQuantityChange(item, item.quantity - 1, 'sub')}
                                                 disabled={item.quantity <= 1}
                                                 className="border-gray-300"
                                             />
@@ -137,10 +140,11 @@ const CartComponent = () => {
                                                 value={item.quantity}
                                                 onChange={(value) => handleQuantityChange(item, value || 1)}
                                                 className="w-16 text-center"
+                                                disabled
                                             />
                                             <Button
                                                 icon={<PlusOutlined />}
-                                                onClick={() => handleQuantityChange(item, item.quantity + 1)}
+                                                onClick={() => handleQuantityChange(item, item.quantity + 1, 'add')}
                                                 disabled={item.quantity >= (item.variant.stock || Infinity)}
                                                 className="border-gray-300"
                                             />

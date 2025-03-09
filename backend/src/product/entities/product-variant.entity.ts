@@ -1,7 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Product } from './product.entity';
 import { AbstractEntity } from '@/base/service/abstract-entity.service';
-import { BillItem } from '@/bill/entities/bill-item.entity';
 
 @Entity()
 export class ProductVariant extends AbstractEntity {
@@ -17,7 +16,4 @@ export class ProductVariant extends AbstractEntity {
 
   @Column({ default: 0 })
   stock: number;
-
-  @OneToMany(() => BillItem, b => b.variant)
-  bill_items: BillItem[];
 }

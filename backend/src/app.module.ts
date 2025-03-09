@@ -22,6 +22,7 @@ import { CartModule } from './cart/cart.module';
 import { BillModule } from './bill/bill.module';
 import { CategoryModule } from './category/category.module';
 import { ProductModule } from './product/product.module';
+import { BehaviorModule } from './behavior/behavior.module';
 
 const appModule = [AuthModule, UserModule, RoleModule, MailerModule];
 const baseModule = [LoggerModule, UploadFileModule];
@@ -39,6 +40,7 @@ const baseModule = [LoggerModule, UploadFileModule];
     BillModule,
     CategoryModule,
     ProductModule,
+    BehaviorModule,
   ],
   controllers: [],
   providers: [],

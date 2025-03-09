@@ -1,13 +1,19 @@
-import React from "react";
 
+import { Typography } from "antd";
+import React from "react";
+const { Title } = Typography
 const ContactPage = () => {
     return (
         <section className="page_contact section py-6">
             <div className="container mx-auto px-4">
+                <Title level={2} className="text-center mb-6 text-gray-800">
+                    Giới thiệu
+                </Title>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Left Section */}
+
                     <div className="left-contact p-4">
-                        <h1 className="text-2xl font-bold mb-4">Có tất </h1>
+
                         <div className="mb-3 flex items-start">
                             <i className="fas fa-map-marker-alt text-lg mr-2 text-gray-600"></i>
                             <div>

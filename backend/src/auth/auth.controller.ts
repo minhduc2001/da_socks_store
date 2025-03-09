@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { Public } from './decorator/public.decorator';
-import { LoginDto, RegisterDto } from './dtos/auth.dto';
+import { LoginDto, LoginUserDto, RegisterDto } from './dtos/auth.dto';
 import { GetUser } from './decorator/get-user.decorator';
 import { User } from '@/user/entities/user.entity';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
@@ -18,6 +18,18 @@ export class AuthController {
   @Post('login')
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Public()
+  @Post('login-user')
+  async loginUser(@Body() dto: LoginUserDto) {
+    return this.authService.loginUser(dto);
+  }
+
+  @Public()
+  @Post('register')
+  async register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
   }
 
   @Get('get-me')

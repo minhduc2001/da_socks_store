@@ -1,14 +1,17 @@
-import ApiUser, { ILoginBody, ILoginRes, IRegisterBody } from "@/api/ApiUser";
+import ApiUser, { EGender, ILoginBody, ILoginRes, IRegisterBody } from "@/api/ApiUser";
 import FormGlobal, {
+    DatePickerFormikGlobal,
     FormItemGlobal,
     InputFormikGlobal,
     InputPasswordFormikGlobal,
+    SelectFormikGlobal,
 } from "@/components/FormGlobal";
 import { loginUser } from "@/redux/slices/UserSlice";
 import { RegisterValidation } from "@/utils/validation/login";
 import { useMutation } from "@tanstack/react-query";
-import { Spin } from "antd";
+import { Col, Row, Spin } from "antd";
 import { Formik } from "formik";
+import moment from "moment";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -22,11 +25,13 @@ const Register = () => {
                 email: values.email,
                 password: values.password,
                 username: values.username,
+                gender: values.gender,
+                date_of_birth: moment(values.date_of_birth).format('DD/MM/YYYY')
             },
             {
                 onSuccess: (res: any) => {
                     dispatch(loginUser({ ...res }));
-                    window.location.replace("/user");
+                    window.location.replace("/");
                 },
             }
         );
@@ -35,13 +40,13 @@ const Register = () => {
     return (
         <Spin tip="Loading..." size="large" spinning={registerMutation.isLoading}>
             <Formik
-                initialValues={{ email: "", password: "", username: "" }}
+                initialValues={{ email: "", password: "", username: "", date_of_birth: '', gender: '' }}
                 validationSchema={RegisterValidation}
                 onSubmit={handleRegister}
             >
                 {({ handleSubmit }): JSX.Element => (
                     <section className="flex flex-col md:flex-row h-[90vh] items-center w-[90%]">
-                        <div className="hidden lg:block w-full md:w-1/2 xl:w-2/3 h-[80%] !flex items-center justify-center">
+                        <div className="hidden lg:block w-full md:w-1/2 xl:w-1/2 h-[80%] !flex items-center justify-center">
                             <img
                                 src="https://cotat.vn/wp-content/uploads/2024/06/logo-ctt-ngang-03-time-skip-355b465042.png"
                                 alt=""
@@ -49,9 +54,9 @@ const Register = () => {
                             />
                         </div>
 
-                        <div className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/3 h-screen px-6 lg:px-16 xl:px-12 flex items-center justify-center">
+                        <div className="bg-white w-full md:max-w-md lg:max-w-full md:mx-auto md:mx-0 md:w-1/2 xl:w-1/2 h-screen px-6 lg:px-16 xl:px-12 flex items-center justify-center">
                             <div className="w-full h-100">
-                                <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12">
+                                <h1 className="text-xl md:text-2xl font-bold leading-tight mt-12 text-center">
                                     Đăng ký tài khoản
                                 </h1>
 
@@ -60,41 +65,62 @@ const Register = () => {
                                     method="POST"
                                     onFinish={handleSubmit}
                                 >
-                                    <FormItemGlobal
-                                        name="username"
-                                        label="Tên người dùng"
-                                        required
-                                    >
-                                        <InputFormikGlobal
-                                            name="username"
-                                            placeholder="Nhập tên người dùng"
-                                        />
-                                    </FormItemGlobal>
+                                    <Row gutter={33}>
+                                        <Col span={12}>
+                                            <FormItemGlobal
+                                                name="username"
+                                                label="Tên người dùng"
+                                                required
+                                            >
+                                                <InputFormikGlobal
+                                                    name="username"
+                                                    placeholder="Nhập tên người dùng"
+                                                />
+                                            </FormItemGlobal>
 
-                                    <FormItemGlobal name="email" label="Email" required>
-                                        <InputFormikGlobal
-                                            name="email"
-                                            placeholder="user@example.com"
-                                        />
-                                    </FormItemGlobal>
+                                            <FormItemGlobal
+                                                name="date_of_birth"
+                                                label="Ngày sinh"
+                                                required
+                                            >
+                                                <DatePickerFormikGlobal
+                                                    name="date_of_birth"
+                                                />
+                                            </FormItemGlobal>
 
-                                    <FormItemGlobal name="password" label="Mật khẩu" required>
-                                        <InputPasswordFormikGlobal
-                                            name="password"
-                                            placeholder="Nhập mật khẩu"
-                                        />
-                                    </FormItemGlobal>
+                                            <FormItemGlobal name="password" label="Mật khẩu" required>
+                                                <InputPasswordFormikGlobal
+                                                    name="password"
+                                                    placeholder="Nhập mật khẩu"
+                                                />
+                                            </FormItemGlobal>
+                                        </Col>
+                                        <Col span={12}>
+                                            <FormItemGlobal name="email" label="Email" required>
+                                                <InputFormikGlobal
+                                                    name="email"
+                                                    placeholder="user@example.com"
+                                                />
+                                            </FormItemGlobal>
+                                            <FormItemGlobal name="gender" label="Giới tính" required>
+                                                <SelectFormikGlobal
+                                                    name="gender"
+                                                    options={Object.values(EGender).map(v => ({ value: v, label: v }))}
+                                                />
+                                            </FormItemGlobal>
 
-                                    <FormItemGlobal
-                                        name="re-password"
-                                        label="Nhập lại mật khẩu"
-                                        required
-                                    >
-                                        <InputPasswordFormikGlobal
-                                            name="re-password"
-                                            placeholder="Nhập lại mật khẩu"
-                                        />
-                                    </FormItemGlobal>
+                                            <FormItemGlobal
+                                                name="re-password"
+                                                label="Nhập lại mật khẩu"
+                                                required
+                                            >
+                                                <InputPasswordFormikGlobal
+                                                    name="re-password"
+                                                    placeholder="Nhập lại mật khẩu"
+                                                />
+                                            </FormItemGlobal>
+                                        </Col>
+                                    </Row>
 
                                     <button
                                         type="submit"

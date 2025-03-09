@@ -16,6 +16,8 @@ import { PaginateConfig } from '@base/service/paginate/paginate';
 
 import { ActiveUserDto, CmsCreateUserDto, CmsUpdateUserDto } from './dtos/create-user.dto';
 import { ERole } from '@/role/enum/roles.enum';
+import { RegisterDto } from '@/auth/dtos/auth.dto';
+import { EGender } from './user.constant';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -68,6 +70,16 @@ export class UserService extends BaseService<User> {
 
     return user;
   }
+
+  async findByEmail(email: string) {
+    const user = await this.repository.findOne({
+      where: { email },
+      select: ['id', 'email', 'password', 'active'],
+    });
+
+    return user;
+  }
+
   async create(payload: CmsCreateUserDto) {
     const user = this.repository.create(payload);
     user.setPassword(payload.password);
@@ -107,5 +119,19 @@ export class UserService extends BaseService<User> {
 
     if (payload.active) return 'Chuyển trạng thái hoạt động thành công';
     return 'Khóa tài khoản thành công';
+  }
+
+  async register(dto: RegisterDto) {
+    const userTemp = this.repository.create({});
+    userTemp.email = dto.email;
+    userTemp.active = true;
+    userTemp.birthday = new Date(dto.date_of_birth);
+    userTemp.full_name = dto.username;
+    userTemp.setPassword(dto.password);
+    userTemp.username = dto.email;
+    userTemp.role = ERole.CUSTOMER;
+    userTemp.gender = dto.gender as EGender;
+
+    return await userTemp.save();
   }
 }

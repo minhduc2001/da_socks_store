@@ -22,6 +22,10 @@ function get(id?: string): Promise<any> {
   return fetcher({ url: '/product/' + id, method: 'get' });
 }
 
+function getClient(id?: string): Promise<any> {
+  return fetcher({ url: '/product/' + id + '/client', method: 'get' });
+}
+
 function create(data: FormData) {
   return fetcher({ url: '/product', method: 'post', data }, { isFormData: true });
 }
@@ -51,4 +55,5 @@ export default {
   update,
   active,
   get,
+  getClient,
 };

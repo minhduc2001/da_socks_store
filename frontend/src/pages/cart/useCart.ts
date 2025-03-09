@@ -1,11 +1,13 @@
 // useCart.ts
 import ApiCart, { CartItem } from '@/api/ApiCart';
+import { useGetUserRedux } from '@/redux/slices/UserSlice';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 export const useCart = () => {
   const queryClient = useQueryClient();
 
+  const user = useGetUserRedux();
   // Lấy dữ liệu từ server bằng useQuery
   const {
     data: serverCart,
@@ -14,6 +16,7 @@ export const useCart = () => {
   } = useQuery({
     queryKey: ['cart'],
     queryFn: ApiCart.get,
+    enabled: !!user?.id,
   });
 
   // State cục bộ để quản lý giỏ hàng

@@ -34,6 +34,7 @@ const ProductDetailPage = React.lazy(() => import('@/pages/product/ProductDetail
 const CartPage = React.lazy(() => import('@/pages/cart'))
 const IntroducePage = React.lazy(() => import('@/pages/introduce'))
 const ContactPage = React.lazy(() => import('@/pages/contact'))
+const HistoryPage = React.lazy(() => import('@/pages/order-history'))
 
 export const PUBLIC_ROUTES: IRoute[] = [
   {
@@ -65,5 +66,10 @@ export const PUBLIC_ROUTES: IRoute[] = [
     name: 'Giới thiệu',
     component: IntroducePage,
     path: '/introduce'
+  },
+  {
+    name: 'Giới thiệu',
+    component: HistoryPage,
+    path: '/history'
   },
 ];
