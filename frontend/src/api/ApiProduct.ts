@@ -18,6 +18,18 @@ function list(params?: Query): Promise<DataListResponse<any>> {
   return fetcher({ url: '/product/client', method: 'get', params });
 }
 
+function view(params?: Query): Promise<any> {
+  return fetcher({ url: '/product/views', method: 'get', params });
+}
+
+function buy(params?: Query): Promise<any> {
+  return fetcher({ url: '/product/buy', method: 'get', params });
+}
+
+function recommend(params?: Query): Promise<any> {
+  return fetcher({ url: '/product/recommend', method: 'get', params });
+}
+
 function get(id?: string): Promise<any> {
   return fetcher({ url: '/product/' + id, method: 'get' });
 }
@@ -56,4 +68,7 @@ export default {
   active,
   get,
   getClient,
+  view,
+  buy,
+  recommend
 };
