@@ -6,6 +6,7 @@ import { CartItem } from './entities/cart-item.entity';
 import { ProductVariant } from '@/product/entities/product-variant.entity';
 import { Bill } from '@/bill/entities/bill.entity';
 import { BehaviorService } from '@/behavior/behavior.service';
+import { Product } from '@/product/entities/product.entity';
 
 @Injectable()
 export class CartService {
@@ -14,6 +15,7 @@ export class CartService {
     @InjectRepository(CartItem) private cartItemRepo: Repository<CartItem>,
     @InjectRepository(ProductVariant) private productVariantRepo: Repository<ProductVariant>,
     @InjectRepository(Bill) private billRepo: Repository<Bill>,
+    @InjectRepository(Product) private readonly productRepository: Repository<Product>,
     private behaviorService: BehaviorService,
   ) {}
 
@@ -102,7 +104,12 @@ export class CartService {
       await this.productVariantRepo.update(cart_item.variant.id, {
         stock: variant.stock - cart_item.quantity,
       });
+
+      this.productRepository.update(cart_item.variant.product.id, {
+        buy: cart_item.variant.product.buy + 1,
+      });
     }
+
     return newCart;
   }
 }

@@ -92,6 +92,9 @@ export class ProductService extends BaseService<Product> {
       where: { id },
       relations: { category: true, variants: true },
     });
+
+    product.views += 1;
+    product.save();
     return product;
   }
 
