@@ -42,3 +42,4 @@ docker-compose.yaml
 .env
 
 .vercel
+firebase-key.json

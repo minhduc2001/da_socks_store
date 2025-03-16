@@ -70,11 +70,11 @@ export class ProductService extends BaseService<Product> {
   }
 
   async listViews() {
-    return this.repository.createQueryBuilder('p').orderBy('views', 'DESC').limit(10);
+    return this.repository.createQueryBuilder('p').orderBy('views', 'DESC').limit(10).getMany();
   }
 
   async listBuy() {
-    return this.repository.createQueryBuilder('p').orderBy('buy', 'DESC').limit(10);
+    return this.repository.createQueryBuilder('p').orderBy('buy', 'DESC').limit(10).getMany();
   }
 
   async findOne(id: number, user: User) {

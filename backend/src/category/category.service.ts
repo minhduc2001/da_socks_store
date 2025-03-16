@@ -25,6 +25,8 @@ export class CategoryService extends BaseService<Category> {
   findAll(query: ListDto) {
     const config: PaginateConfig<Category> = {
       sortableColumns: ['updated_at'],
+      defaultSortBy: [['updated_at', 'DESC']],
+      searchableColumns: ['name'],
     };
     return this.listWithPage(query, config);
   }
