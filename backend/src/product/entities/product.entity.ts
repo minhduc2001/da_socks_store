@@ -26,4 +26,10 @@ export class Product extends AbstractEntity {
 
   @OneToMany(() => ProductVariant, pV => pV.product)
   variants: ProductVariant[];
+
+  @Column({ default: 0 })
+  buy: number;
+
+  @Column({ default: 0 })
+  views: number;
 }

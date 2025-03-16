@@ -4,13 +4,15 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { BaseService } from '@/base/service/base.service';
 import { Product } from './entities/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { PaginateConfig } from '@/base/service/paginate/paginate';
 import { ListDto } from '@/shared/dtos/common.dto';
 import { ProductVariant } from './entities/product-variant.entity';
 import { Category } from '@/category/entities/category.entity';
 import { BehaviorService } from '@/behavior/behavior.service';
 import { User } from '@/user/entities/user.entity';
+import { HttpService } from '@nestjs/axios';
+import { catchError, firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class ProductService extends BaseService<Product> {
@@ -20,6 +22,7 @@ export class ProductService extends BaseService<Product> {
     @InjectRepository(ProductVariant)
     private productVariantRepository: Repository<ProductVariant>,
     private behaviorService: BehaviorService,
+    private httpService: HttpService,
   ) {
     super(repository);
   }
@@ -53,6 +56,25 @@ export class ProductService extends BaseService<Product> {
       searchableColumns: ['name', 'category.name'],
     };
     return this.listWithPage(query, config);
+  }
+
+  async listRecommend(query: ListDto, user: User) {
+    const { data } = await firstValueFrom(
+      this.httpService.get(`http://localhost:5000/recommend?user_id=${user.id}`),
+    );
+
+    if (!data) return [];
+    const products = await this.repository.find({ where: { id: In(data) } });
+
+    return products;
+  }
+
+  async listViews() {
+    return this.repository.createQueryBuilder('p').orderBy('views', 'DESC').limit(10);
+  }
+
+  async listBuy() {
+    return this.repository.createQueryBuilder('p').orderBy('buy', 'DESC').limit(10);
   }
 
   async findOne(id: number, user: User) {
