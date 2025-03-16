@@ -23,7 +23,7 @@ print(behavior)
 behavior['interest_score'] = behavior['views'] + 2 * behavior['cart_adds'] + 5 * behavior['purchases']
 user_product_matrix = behavior.pivot_table(index='user_id', columns='product_id', values='interest_score').fillna(0)
 
-def recommend_products(user_id, num_recommendations=5):
+def recommend_products(user_id, num_recommendations=10):
     # Nếu user_id không tồn tại, trả về sản phẩm phổ biến
     if user_id not in user_product_matrix.index:
         popular_products = behavior.groupby('product_id')['purchases'].sum().sort_values(ascending=False).index

@@ -72,6 +72,18 @@ export class ProductController {
     return this.productService.listRecommend(query, user);
   }
 
+  @Get('views')
+  @Public()
+  listViews() {
+    return this.productService.listViews();
+  }
+
+  @Get('buy')
+  @Public()
+  listBuy(@Query() query: ListDto) {
+    return this.productService.listBuy();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @GetUser() user: User) {
     return this.productService.findOne(+id, user);
